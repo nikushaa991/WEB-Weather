@@ -1,5 +1,5 @@
        body {
-           background: url("../images/day.png");
+           background: url("../images/night.png");
            background-position: center;
            z-index: -2;
        }
@@ -14,4 +14,5 @@
            height: 100%;
            background: url("../images/dusk.png");
            background-position: center;
+	   opacity: 0%;
        }
