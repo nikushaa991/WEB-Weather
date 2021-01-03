@@ -1,20 +1,23 @@
+var lastPrimaryBG = ''
+var lastSecondaryBG = ''
+var currMinute = (new Date() - new Date().setHours(0, 0, 0, 0)) / 60000;
+
 function init() {
+    setupDynamicBackground()
+}
 
-    document.getElementById('timeSlider').oninput = function() {
-        var val = this.value;
-        var primaryBG = 'dusk'
-        var secondaryBG = 'night';
-
+function setupDynamicBackground() {
+    function advanceBackground() {
         switch (true) {
-            case (val < 250):
+            case (currMinute < 360):
                 primaryBG = 'dusk';
                 secondaryBG = 'night';
                 break;
-            case (val < 500):
+            case (currMinute < 720):
                 primaryBG = 'day';
                 secondaryBG = 'dusk';
                 break;
-            case (val < 750):
+            case (currMinute < 1080):
                 primaryBG = 'dusk';
                 secondaryBG = 'day';
                 break;
@@ -23,15 +26,21 @@ function init() {
                 secondaryBG = 'dusk';
         }
         let primary = document.getElementById("background-primary");
+        if (lastPrimaryBG !== primaryBG) {
+            primary.style.background = `url('images/${primaryBG}.png')`;
+            primary.style.backgroundPosition = 'center';
+            lastPrimaryBG = primaryBG;
+        }
+        primary.style.opacity = 1 / 360 * (currMinute % 360);
+
         let secondary = document.body;
-
-        primary.style.background = `url('images/${primaryBG}.png')`;
-        primary.style.opacity = 1 / 250 * (val % 250);
-        primary.style.backgroundPosition = 'center';
-
-        secondary.style.background = `url('images/${secondaryBG}.png')`;
-        secondary.style.backgroundPosition = 'center';
-
-
+        if (lastSecondaryBG !== secondaryBG) {
+            secondary.style.background = `url('images/${secondaryBG}.png')`;
+            secondary.style.backgroundPosition = 'center';
+            lastSecondaryBG = secondaryBG;
+        }
+        currMinute++;
     }
+    advanceBackground();
+    setInterval(advanceBackground, 60000);
 }
