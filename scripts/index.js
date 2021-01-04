@@ -4,6 +4,8 @@ var currMinute = (new Date() - new Date().setHours(0, 0, 0, 0)) / 60000;
 
 function init() {
     setupDynamicBackground()
+    setupBookmark(1, "Khashuri", "sun", "-1", "43", "68")
+
 }
 
 function setupDynamicBackground() {
@@ -43,4 +45,15 @@ function setupDynamicBackground() {
     }
     advanceBackground();
     setInterval(advanceBackground, 60000);
+}
+
+
+function setupBookmark(id, city, imageName, temp, humidity, clouds) {
+    let bookmark = document.getElementById(`bookmarks-${id}`).children;
+    bookmark[0].innerHTML = city;
+    bookmark[1].src = 'images/' + imageName + '.png';
+    let stats = bookmark[2].children;
+    stats[1].innerHTML = temp + '&#176'
+    stats[3].innerHTML = humidity + '%';
+    stats[5].innerHTML = clouds + '%';
 }
