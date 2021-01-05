@@ -4,8 +4,6 @@ var currMinute = (new Date() - new Date().setHours(0, 0, 0, 0)) / 60000;
 
 function init() {
     setupDynamicBackground()
-    setupBookmark(1, "Khashuri", "sun", "-1", "43", "68")
-
 }
 
 function setupDynamicBackground() {
@@ -47,13 +45,22 @@ function setupDynamicBackground() {
     setInterval(advanceBackground, 60000);
 }
 
-
-function setupBookmark(id, city, imageName, temp, humidity, clouds) {
-    let bookmark = document.getElementById(`bookmarks-${id}`).children;
+function setupWeatherInfo(id, city, imageName, temp, humidity, clouds) {
+    let bookmark = document.getElementById(`weather-info-${id}`).children;
     bookmark[0].innerHTML = city;
     bookmark[1].src = 'images/' + imageName + '.png';
     let stats = bookmark[2].children;
     stats[1].innerHTML = temp + '&#176'
     stats[3].innerHTML = humidity + '%';
     stats[5].innerHTML = clouds + '%';
+}
+
+function searchForCity() {
+    let city = document.getElementById('search-textfield').value;
+    if (!city) {
+        document.getElementById('weather-info-4').style.visibility = "hidden";
+        return;
+    }
+    setupWeatherInfo(4, city, "sun", "-1", "43", "68")
+    document.getElementById('weather-info-4').style.visibility = "visible";
 }

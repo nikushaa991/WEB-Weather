@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -12,49 +13,57 @@
     </div>
     <div id="top-half-container">
         <div id="search-container">
-            <form autocomplete="off">
-                <div id="autocomplete">
-                    <input id="autocomplete-input" type="text" placeholder="City">
-                </div>
-                <input type="submit">
-            </form>
+            <input id="search-textfield" type="text" placeholder="City" autocomplete="on">
+            <input type="submit" value="Search" onclick="searchForCity()">
+        </div>
+        <div class="weather-info" id="weather-info-4" onclick="redirect(4)">
+            <h2 class="city-name">City Not Found</h2>
+            <img class="weather-icon" src="images/sun.png">
+            <div class="weather-stats">
+                <h6>TEMPERATURE</h6>
+                <h4 class="temp">0</h4>
+                <h6>HUMIDITY </h6>
+                <h4 class="humidity">0</h4>
+                <h6>CLOUDS</h6>
+                <h4 class="clouds">0</h4>
+            </div>
         </div>
     </div>
     <div id="bookmarks-container">
-        <div class="bookmarks" id="bookmarks-1" onclick="redirect(1)">
-            <h1 class="city-name">Empty Bookmark</h1>
+        <div class="weather-info" id="weather-info-1" onclick="redirect(1)">
+            <h2 class="city-name">Empty Bookmark</h2>
             <img class="weather-icon" src="images/sun.png">
             <div class="weather-stats">
-                <h5>TEMPERATURE</h5>
-                <h3 class="temp">0</h3>
-                <h5>HUMIDITY </h5>
-                <h3 class="humidity">1</h3>
-                <h5>CLOUDS</h5>
-                <h3 class="clouds">2</h3>
+                <h6>TEMPERATURE</h6>
+                <h4 class="temp">0</h4>
+                <h6>HUMIDITY </h6>
+                <h4 class="humidity">1</h4>
+                <h6>CLOUDS</h6>
+                <h4 class="clouds">2</h4>
             </div>
         </div>
-        <div class="bookmarks" id="bookmarks-2" onclick="redirect(2)">
-            <h1 class="city-name">Empty Bookmark</h1>
+        <div class="weather-info" id="weather-info-2" onclick="redirect(2)">
+            <h2 class="city-name">Current Location</h2>
             <img class="weather-icon" src="images/rain.png">
             <div class="weather-stats">
-                <h5>TEMPERATURE</h5>
-                <h3 class="temp">0</h3>
-                <h5>HUMIDITY </h5>
-                <h3 class="humidity">1</h3>
-                <h5>CLOUDS</h5>
-                <h3 class="clouds">2</h3>
+                <h6>TEMPERATURE</h6>
+                <h4 class="temp">0</h4>
+                <h6>HUMIDITY </h6>
+                <h4 class="humidity">1</h4>
+                <h6>CLOUDS</h6>
+                <h4 class="clouds">2</h4>
             </div>
         </div>
-        <div class="bookmarks" id="bookmarks-3" onclick="redirect(3)">
-            <h1 class="city-name">Empty Bookmark</h1>
+        <div class="weather-info" id="weather-info-3" onclick="redirect(3)">
+            <h2 class="city-name">Empty Bookmark</h2>
             <img class="weather-icon" src="images/snow.png">
             <div class="weather-stats">
-                <h5>TEMPERATURE</h5>
-                <h3 class="temp">0</h3>
-                <h5>HUMIDITY </h5>
-                <h3 class="humidity">1</h3>
-                <h5>CLOUDS</h5>
-                <h3 class="clouds">2</h3>
+                <h6>TEMPERATURE</h6>
+                <h4 class="temp">0</h4>
+                <h6>HUMIDITY </h6>
+                <h4 class="humidity">1</h4>
+                <h6>CLOUDS</h6>
+                <h4 class="clouds">2</h4>
             </div>
         </div>
     </div>
