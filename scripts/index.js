@@ -56,11 +56,27 @@ function setupWeatherInfo(id, city, imageName, temp, humidity, clouds) {
 }
 
 function searchForCity() {
-    let city = document.getElementById('search-textfield').value;
+    requestCity(document.getElementById('search-textfield').value);
+}
+
+function requestCity(city) {
     if (!city) {
         document.getElementById('weather-info-4').style.visibility = "hidden";
         return;
     }
-    setupWeatherInfo(4, city, "sun", "-1", "43", "68")
-    document.getElementById('weather-info-4').style.visibility = "visible";
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.responseText === "")
+                setupWeatherInfo(4, 'City Not Found', 'sun', '0', '0', '0')
+            else handleResponse(JSON.parse(this.responseText));
+            document.getElementById('weather-info-4').style.visibility = "visible";
+        }
+    };
+    xhttp.open("GET", `fakeAPI/${city}.txt`, true);
+    xhttp.send();
+}
+
+function handleResponse(response) {
+    setupWeatherInfo(4, response.name, "sun", response.main.temp, response.main.humidity, response.clouds.all)
 }
