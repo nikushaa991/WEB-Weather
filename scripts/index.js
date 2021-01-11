@@ -6,12 +6,36 @@ function init() {
     setupDynamicBackground()
     let left = getCookie('left')
     let right = getCookie('right')
-    console.log(left);
-    if (left)
-        requestCity(left, 1, false);
-    if (right)
-        requestCity(right, 3, false);
-    requestCity('Tbilisi', 2, false);
+    if (left && left !== "")
+        updateBookmarks(left, true)
+    if (right && right !== "")
+        updateBookmarks(right, false)
+    setCurrentLocationTemp();
+}
+
+function updateBookmarks(city, isLeft) {
+    if (isLeft)
+        requestCity(city, 1, false);
+    else
+        requestCity(city, 3, false);
+}
+
+function setCurrentLocationTemp() {
+    if (navigator.geolocation) {
+        console.log(navigator.geolocation.getCurrentPosition(locationSuccess))
+    }
+}
+
+async function locationSuccess(pos) {
+    let requestURL = `http://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
+
+    let response = await fetch(requestURL)
+
+    if (response.ok) {
+        let json = await response.json();
+        requestCity(json.data[0].locality, 2, false);
+    }
+
 }
 
 function setupDynamicBackground() {
@@ -71,7 +95,7 @@ function searchForCity() {
 async function requestCity(city, containerIndex, setInvis) {
     container = `weather-info-${containerIndex}`
     if (setInvis && !city) {
-        document.getElementById(container).style.visibility = "hidden";
+        setResultVisibility('hidden')
         return;
     }
     let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=e7e7d5d2da4aee3dcb44529c9c69f31a`)
@@ -82,7 +106,7 @@ async function requestCity(city, containerIndex, setInvis) {
     } else setupWeatherInfo(containerIndex, 'Error', 'sun', '0', '0', '0')
 
     if (setInvis)
-        document.getElementById(container).style.visibility = "visible";
+        setResultVisibility('visible')
 }
 
 function handleResponse(response, containerIndex) {
@@ -103,12 +127,21 @@ function handleResponse(response, containerIndex) {
 
 
 //COOKIE METHODS
-function setCookie(name, value) {
+function setCookie(name, isLeft) {
+    var value = document.getElementById(`weather-info-4`).children[0].innerHTML
     document.cookie = `${name}=${value}; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/`
+    updateBookmarks(value, isLeft)
 }
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function setResultVisibility(value) {
+    document.getElementById('weather-info-4').style.visibility = value;
+    document.getElementById('cookie-button-container').style.visibility = value;
+
+
 }

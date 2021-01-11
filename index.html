@@ -17,7 +17,7 @@
             <input type='button' value="Search" onclick="searchForCity()">
         </div>
         <div class="weather-info" id="weather-info-4" onclick="redirect(4)">
-            <h2 class="city-name">City Not Found</h2>
+            <h2 class="city-name">Error</h2>
             <img class="weather-icon" src="images/sun.png">
             <div class="weather-stats">
                 <h6>TEMPERATURE</h6>
@@ -28,10 +28,18 @@
                 <h4 class="clouds">0</h4>
             </div>
         </div>
+        <div id="cookie-button-container">
+            <div id="cookie-left" class="cookie-button" onclick="setCookie('left', 1)">
+                Pin Left
+            </div>
+            <div id=" cookie-right" class="cookie-button" onclick="setCookie('right', 0)">
+                Pin Right
+            </div>
+        </div>
     </div>
     <div id="bookmarks-container">
         <div class="weather-info" id="weather-info-1" onclick="redirect(1)">
-            <h2 class="city-name">Empty Bookmark</h2>
+            <h2 class="city-name">Unset Bookmark</h2>
             <img class="weather-icon" src="images/sun.png">
             <div class="weather-stats">
                 <h6>TEMPERATURE</h6>
@@ -43,7 +51,7 @@
             </div>
         </div>
         <div class="weather-info" id="weather-info-2" onclick="redirect(2)">
-            <h2 class="city-name">Current Location</h2>
+            <h2 class="city-name">Needs Permission</h2>
             <img class="weather-icon" src="images/rain.png">
             <div class="weather-stats">
                 <h6>TEMPERATURE</h6>
@@ -55,7 +63,7 @@
             </div>
         </div>
         <div class="weather-info" id="weather-info-3" onclick="redirect(3)">
-            <h2 class="city-name">Empty Bookmark</h2>
+            <h2 class="city-name">Unset Bookmark</h2>
             <img class="weather-icon" src="images/snow.png">
             <div class="weather-stats">
                 <h6>TEMPERATURE</h6>
