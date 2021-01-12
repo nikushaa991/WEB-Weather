@@ -13,31 +13,18 @@ function init() {
     setCurrentLocationTemp();
 }
 
-function updateBookmarks(city, isLeft) {
-    if (isLeft)
-        requestCity(city, 1, false);
-    else
-        requestCity(city, 3, false);
+//HTML interface
+function searchForCity() {
+    requestCity(document.getElementById('search-textfield').value, 4, true);
 }
 
-function setCurrentLocationTemp() {
-    if (navigator.geolocation) {
-        console.log(navigator.geolocation.getCurrentPosition(locationSuccess))
-    }
+function redirect(index) {
+    var value = getCityByContainer(index);
+    if (value == "Error") return;
+    window.location.href = `/city.html?name=${value}`
 }
 
-async function locationSuccess(pos) {
-    let requestURL = `http://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
-
-    let response = await fetch(requestURL)
-
-    if (response.ok) {
-        let json = await response.json();
-        requestCity(json.data[0].locality, 2, false);
-    }
-
-}
-
+//Dynamic background
 function setupDynamicBackground() {
     function advanceBackground() {
         switch (true) {
@@ -77,21 +64,35 @@ function setupDynamicBackground() {
     setInterval(advanceBackground, 60000);
 }
 
-function setupWeatherInfo(id, city, image, temp, humidity, clouds) {
-    let bookmark = document.getElementById(`weather-info-${id}`).children;
-    bookmark[0].innerHTML = city;
-    bookmark[1].src = 'images/' + image + '.png';
-    let stats = bookmark[2].children;
-    stats[1].innerHTML = temp + '&#176'
-    stats[3].innerHTML = humidity + '%';
-    stats[5].innerHTML = clouds + '%';
+//Current location
+function setCurrentLocationTemp() {
+    if (navigator.geolocation) {
+        console.log(navigator.geolocation.getCurrentPosition(locationSuccess))
+    }
 }
 
-function searchForCity() {
-    requestCity(document.getElementById('search-textfield').value, 4, true);
+//Geolocation API
+async function locationSuccess(pos) {
+    let requestURL = `http://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
+
+    let response = await fetch(requestURL)
+
+    if (response.ok) {
+        let json = await response.json();
+        requestCity(json.data[0].locality, 2, false);
+    }
+
 }
 
+//Bookmarks
+function updateBookmarks(city, isLeft) {
+    if (isLeft)
+        requestCity(city, 1, false);
+    else
+        requestCity(city, 3, false);
+}
 
+//Weather API
 async function requestCity(city, containerIndex, setInvis) {
     container = `weather-info-${containerIndex}`
     if (setInvis && !city) {
@@ -125,10 +126,26 @@ function handleResponse(response, containerIndex) {
     setupWeatherInfo(containerIndex, response.name, icon, response.main.temp, response.main.humidity, response.clouds.all)
 }
 
+//HTML mutator
+function setupWeatherInfo(id, city, image, temp, humidity, clouds) {
+    let bookmark = document.getElementById(`weather-info-${id}`).children;
+    bookmark[0].innerHTML = city;
+    bookmark[1].src = 'images/' + image + '.png';
+    let stats = bookmark[2].children;
+    stats[1].innerHTML = temp + '&#176'
+    stats[3].innerHTML = humidity + '%';
+    stats[5].innerHTML = clouds + '%';
+}
 
-//COOKIE METHODS
+function setResultVisibility(value) {
+    document.getElementById('weather-info-4').style.visibility = value;
+    document.getElementById('cookie-button-container').style.visibility = value;
+}
+
+
+//Cookies
 function setCookie(name, isLeft) {
-    var value = document.getElementById(`weather-info-4`).children[0].innerHTML
+    var value = getCityByContainer(4)
     document.cookie = `${name}=${value}; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/`
     updateBookmarks(value, isLeft)
 }
@@ -139,9 +156,7 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-function setResultVisibility(value) {
-    document.getElementById('weather-info-4').style.visibility = value;
-    document.getElementById('cookie-button-container').style.visibility = value;
-
-
+//Util
+function getCityByContainer(index) {
+    return document.getElementById(`weather-info-${index}`).children[0].innerHTML
 }
