@@ -67,7 +67,7 @@ function setupDynamicBackground() {
 //Current location
 function setCurrentLocationTemp() {
     if (navigator.geolocation) {
-        console.log(navigator.geolocation.getCurrentPosition(locationSuccess))
+        navigator.geolocation.getCurrentPosition(locationSuccess)
     }
 }
 

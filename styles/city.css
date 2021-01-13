@@ -62,6 +62,7 @@
    }
    
    .day {
+       user-select: none;
        position: relative;
        top: -50px;
    }

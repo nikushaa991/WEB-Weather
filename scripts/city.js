@@ -1,63 +1,23 @@
+const weekdays = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+const mainOffset = 150;
+const elemHeight = 375;
+const elemBaseColorR = 25;
+const offsetTitle = -50;
+const ticks = 50;
+
+
 var lastPrimaryBG = ''
 var lastSecondaryBG = ''
 var currMinute = (new Date() - new Date().setHours(0, 0, 0, 0)) / 60000;
-var weekdays = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-var inAction = false;
+var inAction = true;
+var weatherStats = {};
+var cycle = 0;
 
 function init() {
-    setupDynamicBackground()
-}
-
-//Interface 
-function myAnim() {
-    if (inAction) return;
-    inAction = true;
-    var elemCurr = document.getElementById("weather-info-1");
-    var elemNext = document.getElementById("weather-info-2");
-    var elemNext2 = document.getElementById("weather-info-3");
-    var elemNext3 = document.getElementById("weather-info-4");
-    var elemNextTitle = document.getElementById("day1");
-
-
-    var tick = 0;
-    var id = setInterval(frame, 17);
-
-    function frame() {
-        if (tick == 50) {
-            elemCurr.style.opacity = 1;
-            elemCurr.style.top = 150 + "px";
-
-            elemNext.style.top = -225 + "px";
-            elemNext.style.backgroundColor = "rgb(75, 20, 121)";
-            elemNextTitle.style.top = -50 + "Px"
-
-            elemNext2.style.top = -600 + "px";
-            elemNext2.style.backgroundColor = "rgb(50, 20, 121)";
-
-            elemNext3.style.top = -975 + "px";
-            elemNext3.style.opacity = 0;
-            elemNext3.style.backgroundColor = "rgb(25, 20, 121)";
-
-            inAction = false;
-
-            clearInterval(id);
-        } else {
-            tick++;
-            elemCurr.style.top = (150 + 2 * tick) + "px";
-            elemCurr.style.opacity = 1 - tick / 50
-
-            elemNext.style.top = (-225 + tick) + "px";
-            elemNext.style.backgroundColor = "rgb(" + (75 + tick / 2) + ", 20, 121)";
-            elemNextTitle.style.top = (tick - 50) + "px"
-
-            elemNext2.style.top = (-600 + tick) + "px";
-            elemNext2.style.backgroundColor = "rgb(" + (50 + tick / 2) + ", 20, 121)";
-
-            elemNext3.style.top = (-975 + tick) + "px";
-            elemNext3.style.backgroundColor = "rgb(" + (25 + tick / 2) + ", 20, 121)";
-            elemNext3.style.opacity = tick / 50;
-        }
-    }
+    setupDynamicBackground();
+    city = window.location.search.substr(6);
+    setCity(city);
+    getCoords(city);
 }
 
 //Dynamic background
@@ -100,26 +60,127 @@ function setupDynamicBackground() {
     setInterval(advanceBackground, 60000);
 }
 
-//Weather API
-async function requestCity(city, containerIndex, setInvis) {
-    container = `weather-info-${containerIndex}`
-    if (setInvis && !city) {
-        setResultVisibility('hidden')
-        return;
-    }
-    let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=e7e7d5d2da4aee3dcb44529c9c69f31a`)
+//Geolocation API
+async function getCoords(city) {
+    let requestURL = `http://api.positionstack.com/v1/forward?access_key=d3477dae443ec8e560868664b6c15479&query=${city}`
+
+    let response = await fetch(requestURL)
 
     if (response.ok) {
         let json = await response.json();
-        handleResponse(json, containerIndex)
-    } else setupWeatherInfo(containerIndex, 'Error', 'sun', '0', '0', '0')
-
-    if (setInvis)
-        setResultVisibility('visible')
+        lat = json.data[0].latitude;
+        lon = json.data[0].longitude;
+        setupWeather(lat, lon)
+    }
 }
 
-function handleResponse(response, containerIndex) {
-    let id = response.weather[0].id
+//Weather API
+async function setupWeather(lat, lon) {
+    let response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=e7e7d5d2da4aee3dcb44529c9c69f31a&units=metric`)
+    if (response.ok) {
+        let json = await response.json();
+        handleResponse(json)
+    }
+}
+
+function handleResponse(response) {
+    weatherStats = response.daily;
+    update();
+    inAction = false;
+}
+
+//Update info
+function update() {
+    for (idx = 1; idx < 5; idx++) {
+        day = (cycle + idx - 1) % 7;
+        currInfo = weatherStats[day]
+        icon = getIcon(currInfo.weather[0].id)
+        setupWeatherInfo(idx, day, icon, currInfo.temp.day, currInfo.humidity, currInfo.clouds)
+    }
+    cycle++;
+}
+
+//HTML mutator
+function setupWeatherInfo(id, day, image, temp, humidity, clouds) {
+    let main = document.getElementById(`weather-info-${id}`).children;
+    main[0].src = 'images/' + image + '.png';
+    let stats = main[1].children;
+    stats[0].innerHTML = getWeekdayFromToday(day)
+    stats[2].innerHTML = temp + '&#176C'
+    stats[4].innerHTML = humidity + '%';
+    stats[6].innerHTML = clouds + '%';
+}
+
+function setCity(city) {
+    document.getElementById('city-name').innerHTML = city;
+}
+//Animation 
+function myAnim() {
+    if (inAction) return;
+    inAction = true;
+    var elemCurr = document.getElementById("weather-info-1");
+    var elemNext1 = document.getElementById("weather-info-2");
+    var elemNext2 = document.getElementById("weather-info-3");
+    var elemNext3 = document.getElementById("weather-info-4");
+    var elemNextTitle = document.getElementById("day1");
+
+
+    var tick = 0;
+    var id = setInterval(frame, 12);
+
+    function frame() {
+        if (tick == ticks) {
+            mutateElem(elemCurr, 0, 0, 1);
+            elemCurr.style.opacity = 1;
+
+            mutateElem(elemNext1, 1, 0, 1);
+            elemNextTitle.style.top = getIntPx(offsetTitle)
+
+            mutateElem(elemNext2, 2, 0, 1);
+
+            mutateElem(elemNext3, 3, 0, 1);
+            elemNext3.style.opacity = 0;
+
+            inAction = false;
+            clearInterval(id);
+            update();
+        } else {
+            tick++;
+            mutateElem(elemCurr, 0, tick, 2);
+            elemCurr.style.opacity = 1 - tick / ticks;
+            1
+
+            mutateElem(elemNext1, 1, tick, 1);
+            elemNextTitle.style.top = getIntPx(tick + offsetTitle)
+
+            mutateElem(elemNext2, 2, tick, 1);
+
+            mutateElem(elemNext3, 3, tick, 1);
+            elemNext3.style.opacity = tick / ticks;
+        }
+    }
+}
+
+
+//Utils
+function mutateElem(elem, elemIndex, tick, spd) {
+    elem.style.top = getIntPx((mainOffset - elemIndex * elemHeight) + tick * spd)
+    elem.style.backgroundColor = getColorStr(elemBaseColorR * (4 - elemIndex) + tick / 2);
+}
+
+function getColorStr(R) {
+    return "rgb(" + R + ", 20, 121)";
+}
+
+function getIntPx(val) {
+    return val + "px";
+}
+
+function getWeekdayFromToday(index) {
+    return weekdays[(new Date().getDay() + index) % 7];
+}
+
+function getIcon(id) {
     var icon = "sun"
     switch (String(id).charAt(0)) {
         case '2':
@@ -129,23 +190,6 @@ function handleResponse(response, containerIndex) {
             break;
         case '6':
             icon = "snow";
-            break;
     }
-    setupWeatherInfo(containerIndex, response.name, icon, response.main.temp, response.main.humidity, response.clouds.all)
-}
-
-//HTML mutator
-function setupWeatherInfo(id, city, image, temp, humidity, clouds) {
-    let bookmark = document.getElementById(`weather-info-${id}`).children;
-    bookmark[0].innerHTML = city;
-    bookmark[1].src = 'images/' + image + '.png';
-    let stats = bookmark[2].children;
-    stats[1].innerHTML = temp + '&#176'
-    stats[3].innerHTML = humidity + '%';
-    stats[5].innerHTML = clouds + '%';
-}
-
-
-function getWeekdayFromToday(index) {
-    return weekdays[new Date().getDay() + index];
+    return icon;
 }
