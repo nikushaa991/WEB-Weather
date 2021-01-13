@@ -78,6 +78,7 @@
        align-items: center;
        border-radius: 35px;
        z-index: 11;
+       user-select: none;
    }
    
    .weather-info-title {

@@ -122,6 +122,7 @@
            align-items: center;
            opacity: 0.9;
            border-radius: 35px;
+           user-select: none;
        }
        
        .weather-stats {
@@ -148,4 +149,5 @@
        
        .weather-icon {
            height: 30%;
+           user-select: none;
        }
