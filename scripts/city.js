@@ -1,27 +1,63 @@
 var lastPrimaryBG = ''
 var lastSecondaryBG = ''
 var currMinute = (new Date() - new Date().setHours(0, 0, 0, 0)) / 60000;
+var weekdays = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+var inAction = false;
 
 function init() {
     setupDynamicBackground()
-    let left = getCookie('left')
-    let right = getCookie('right')
-    if (left && left !== "")
-        updateBookmarks(left, true)
-    if (right && right !== "")
-        updateBookmarks(right, false)
-    setCurrentLocationTemp();
 }
 
-//HTML interface
-function searchForCity() {
-    requestCity(document.getElementById('search-textfield').value, 4, true);
-}
+//Interface 
+function myAnim() {
+    if (inAction) return;
+    inAction = true;
+    var elemCurr = document.getElementById("weather-info-1");
+    var elemNext = document.getElementById("weather-info-2");
+    var elemNext2 = document.getElementById("weather-info-3");
+    var elemNext3 = document.getElementById("weather-info-4");
+    var elemNextTitle = document.getElementById("day1");
 
-function redirect(index) {
-    var value = getCityByContainer(index);
-    if (value == "Error" || value == "Needs Permission") return;
-    window.location.href = `/city.html?name=${value}`
+
+    var tick = 0;
+    var id = setInterval(frame, 17);
+
+    function frame() {
+        if (tick == 50) {
+            elemCurr.style.opacity = 1;
+            elemCurr.style.top = 150 + "px";
+
+            elemNext.style.top = -225 + "px";
+            elemNext.style.backgroundColor = "rgb(75, 20, 121)";
+            elemNextTitle.style.top = -50 + "Px"
+
+            elemNext2.style.top = -600 + "px";
+            elemNext2.style.backgroundColor = "rgb(50, 20, 121)";
+
+            elemNext3.style.top = -975 + "px";
+            elemNext3.style.opacity = 0;
+            elemNext3.style.backgroundColor = "rgb(25, 20, 121)";
+
+            inAction = false;
+
+            clearInterval(id);
+        } else {
+            tick++;
+            elemCurr.style.top = (150 + 2 * tick) + "px";
+            elemCurr.style.opacity = 1 - tick / 50
+
+            elemNext.style.top = (-225 + tick) + "px";
+            elemNext.style.backgroundColor = "rgb(" + (75 + tick / 2) + ", 20, 121)";
+            elemNextTitle.style.top = (tick - 50) + "px"
+
+            elemNext2.style.top = (-600 + tick) + "px";
+            elemNext2.style.backgroundColor = "rgb(" + (50 + tick / 2) + ", 20, 121)";
+
+            elemNext3.style.top = (-975 + tick) + "px";
+            elemNext3.style.backgroundColor = "rgb(" + (25 + tick / 2) + ", 20, 121)";
+            elemNext3.style.opacity = tick / 50;
+        }
+    }
 }
 
 //Dynamic background
@@ -62,34 +98,6 @@ function setupDynamicBackground() {
     }
     advanceBackground();
     setInterval(advanceBackground, 60000);
-}
-
-//Current location
-function setCurrentLocationTemp() {
-    if (navigator.geolocation) {
-        console.log(navigator.geolocation.getCurrentPosition(locationSuccess))
-    }
-}
-
-//Geolocation API
-async function locationSuccess(pos) {
-    let requestURL = `http://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
-
-    let response = await fetch(requestURL)
-
-    if (response.ok) {
-        let json = await response.json();
-        requestCity(json.data[0].locality, 2, false);
-    }
-
-}
-
-//Bookmarks
-function updateBookmarks(city, isLeft) {
-    if (isLeft)
-        requestCity(city, 1, false);
-    else
-        requestCity(city, 3, false);
 }
 
 //Weather API
@@ -137,26 +145,7 @@ function setupWeatherInfo(id, city, image, temp, humidity, clouds) {
     stats[5].innerHTML = clouds + '%';
 }
 
-function setResultVisibility(value) {
-    document.getElementById('weather-info-4').style.visibility = value;
-    document.getElementById('cookie-button-container').style.visibility = value;
-}
 
-
-//Cookies
-function setCookie(name, isLeft) {
-    var value = getCityByContainer(4)
-    document.cookie = `${name}=${value}; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/`
-    updateBookmarks(value, isLeft)
-}
-
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-//Util
-function getCityByContainer(index) {
-    return document.getElementById(`weather-info-${index}`).children[0].innerHTML
+function getWeekdayFromToday(index) {
+    return weekdays[new Date().getDay() + index];
 }

@@ -1,0 +1,134 @@
+   body {
+       height: 100vh;
+       margin: 0;
+       z-index: -2;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+   }
+   
+   #background-primary {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       z-index: -1;
+   }
+   
+   #main-container {
+       height: 80%;
+       width: 60%;
+       border-radius: 35px;
+       display: flex;
+       flex-direction: column;
+       justify-content: center;
+       align-items: center;
+       min-width: 300px;
+   }
+   
+   #anim-container {
+       height: 575px;
+       width: 300px;
+   }
+   
+   #city-name {
+       position: relative;
+       margin-top: 50px;
+   }
+   
+   #weather-info-1 {
+       top: 150px;
+   }
+   
+   #weather-info-2 {
+       top: -225px;
+       background-color: rgb(75, 20, 121);
+       z-index: 10;
+   }
+   
+   #weather-info-3 {
+       top: -600px;
+       background-color: rgb(50, 20, 121);
+       z-index: 9;
+   }
+   
+   #weather-info-4 {
+       top: -975px;
+       background-color: rgb(25, 20, 121);
+       z-index: 8;
+       opacity: 0;
+   }
+   
+   .day {
+       position: relative;
+       top: -50px;
+   }
+   
+   .weather-info {
+       height: 325px;
+       width: 100%;
+       position: relative;
+       min-width: 280px;
+       background-color: rgb(100, 20, 121);
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border-radius: 35px;
+       z-index: 11;
+   }
+   
+   .weather-info-title {
+       height: 40%;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       padding-right: 15%;
+       gap: 2%;
+   }
+   
+   .weather-stats {
+       height: 30%;
+       width: 50%;
+       display: flex;
+       flex-direction: column;
+       align-items: flex-end;
+       justify-content: space-evenly;
+       margin-right: 10%;
+   }
+   
+   text1,
+   text2 {
+       color: white;
+       margin: 0;
+       font-family: 'Montserrat';
+       font-weight: 100;
+       margin-bottom: 10px;
+   }
+   
+   text1 {
+       font-size: 30px;
+   }
+   
+   text2 {
+       font-size: 25px;
+   }
+   
+   h6 {
+       color: white;
+       margin: 0;
+       font-family: 'Montserrat';
+       font-weight: 600;
+   }
+   
+   h1 {
+       color: white;
+       font-family: 'Montserrat';
+       font-weight: 600;
+   }
+   
+   .weather-icon {
+       margin-left: 5%;
+       width: 45%;
+   }
