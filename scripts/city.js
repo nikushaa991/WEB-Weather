@@ -62,14 +62,15 @@ function setupDynamicBackground() {
 
 //Geolocation API
 async function getCoords(city) {
-    let requestURL = `http://api.positionstack.com/v1/forward?access_key=d3477dae443ec8e560868664b6c15479&query=${city}`
+
+    let requestURL = `https://us1.locationiq.com/v1/search.php?key=pk.399a766757ab17aaea7de3bcf507aeb1&q=${city}&format=json`
 
     let response = await fetch(requestURL)
 
     if (response.ok) {
         let json = await response.json();
-        lat = json.data[0].latitude;
-        lon = json.data[0].longitude;
+        lat = json[0].lat;
+        lon = json[0].lon;
         setupWeather(lat, lon)
     }
 }

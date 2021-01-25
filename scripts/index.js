@@ -73,13 +73,13 @@ function setCurrentLocationTemp() {
 
 //Geolocation API
 async function locationSuccess(pos) {
-    let requestURL = `http://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
+    let requestURL = `https://us1.locationiq.com/v1/reverse.php?key=pk.399a766757ab17aaea7de3bcf507aeb1&format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
 
     let response = await fetch(requestURL)
 
     if (response.ok) {
         let json = await response.json();
-        requestCity(json.data[0].locality, 2, false);
+        requestCity(json.address.city, 2, false);
     }
 
 }
