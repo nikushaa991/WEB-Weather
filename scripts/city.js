@@ -62,7 +62,7 @@ function setupDynamicBackground() {
 
 //Geolocation API
 async function getCoords(city) {
-    let requestURL = `http://api.positionstack.com/v1/forward?access_key=d3477dae443ec8e560868664b6c15479&query=${city}`
+    let requestURL = `https://api.positionstack.com/v1/forward?access_key=d3477dae443ec8e560868664b6c15479&query=${city}`
 
     let response = await fetch(requestURL)
 

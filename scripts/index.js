@@ -73,7 +73,7 @@ function setCurrentLocationTemp() {
 
 //Geolocation API
 async function locationSuccess(pos) {
-    let requestURL = `http://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
+    let requestURL = `https://api.positionstack.com/v1/reverse?access_key=d3477dae443ec8e560868664b6c15479&query=${pos.coords.latitude},${pos.coords.longitude}`
 
     let response = await fetch(requestURL)
 
@@ -99,7 +99,7 @@ async function requestCity(city, containerIndex, setInvis) {
         setResultVisibility('hidden')
         return;
     }
-    let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=e7e7d5d2da4aee3dcb44529c9c69f31a`)
+    let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=e7e7d5d2da4aee3dcb44529c9c69f31a`)
 
     if (response.ok) {
         let json = await response.json();
