@@ -99,7 +99,7 @@ async function requestCity(city, containerIndex, setInvis) {
         setResultVisibility('hidden')
         return;
     }
-    let response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=e7e7d5d2da4aee3dcb44529c9c69f31a`)
+    let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=e7e7d5d2da4aee3dcb44529c9c69f31a`)
 
     if (response.ok) {
         let json = await response.json();
